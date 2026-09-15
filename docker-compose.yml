@@ -5,7 +5,7 @@ services:
     image: mysql:8.0
     container_name: mysql
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: 1234
     volumes:
@@ -111,6 +111,23 @@ services:
       - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/notificationservice?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+
+  apigateway:
+    build:
+      context: ./ApiGateway
+      dockerfile: Dockerfile
+    container_name: apigateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      configserver:
+        condition: service_started
+      autherservice:
+        condition: service_started
+      orderservice:
+        condition: service_started
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
 
 volumes:
   mysql_data:
