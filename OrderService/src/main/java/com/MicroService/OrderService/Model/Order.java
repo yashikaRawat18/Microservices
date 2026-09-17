@@ -25,6 +25,12 @@ public class Order {
 	
 	private Double amount;
 	private String status;
+	
+	@Column(name="product_id")
+	private Integer productId;
+	
+	private Integer quantity = 1;
+
 	@Column(name="created_at")
 	private LocalDateTime createdAt=LocalDateTime.now();
 	

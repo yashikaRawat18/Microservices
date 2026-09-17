@@ -26,9 +26,22 @@ public class OrderService {
 	
 	@Autowired
 	private OrderProducer orderProducer;
+
+	@Autowired
+	private org.springframework.web.client.RestTemplate restTemplate;
 	
 	public Order createOrder(Order order,String Name) {
 		
+		if (order.getProductId() != null) {
+			int quantity = (order.getQuantity() != null && order.getQuantity() > 0) ? order.getQuantity() : 1;
+			String productServiceUrl = "http://productservice:8093/api/products/" + order.getProductId() + "/reduce-stock?quantity=" + quantity;
+			try {
+				restTemplate.put(productServiceUrl, null);
+			} catch (Exception e) {
+				throw new RuntimeException("Stock Validation Failed: Product not found or insufficient stock!");
+			}
+		}
+
 		Customer customer=customerRepo.findByEmail(Name).orElseGet(
 					()-> {
 						Customer newCustomer=new Customer();

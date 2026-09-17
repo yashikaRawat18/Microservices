@@ -1,0 +1,6 @@
+com/MicroService/ProductService/Repository/ProductRepository.class
+com/MicroService/ProductService/Config/SecurityConfig.class
+com/MicroService/ProductService/Controller/ProductController.class
+com/MicroService/ProductService/Service/ProductService.class
+com/MicroService/ProductService/ProductServiceApplication.class
+com/MicroService/ProductService/Model/Product.class

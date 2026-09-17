@@ -112,6 +112,22 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/notificationservice?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 
+  productservice:
+    build:
+      context: ./ProductService
+      dockerfile: Dockerfile
+    container_name: productservice
+    ports:
+      - "8093:8093"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      configserver:
+        condition: service_started
+    environment:
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/productservice?useSSL=false&allowPublicKeyRetrieval=true
+
   apigateway:
     build:
       context: ./ApiGateway
@@ -125,6 +141,8 @@ services:
       autherservice:
         condition: service_started
       orderservice:
+        condition: service_started
+      productservice:
         condition: service_started
     environment:
       - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
